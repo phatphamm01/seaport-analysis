@@ -7,13 +7,14 @@ Opensea sử dụng trước đây là Wyvern Protocol. Nhưng với sự phát 
 - Mức tiêu thụ gas cao, khoảng 280000 đơn.
 - Nó không được hỗ trợ sử dụng trực tiếp mã thông báo để mua NFT và nó cần được chuyển đổi khi mua. Hơn nữa làm tăng mức tiêu thụ khí đốt và chi phí mua hàng.
 
-Đó là để giải quyết những vấn đề này mà Seaport Protocol đã được phát triển. Anh ta có những đặc điểm sau: - Mua số lượng lớn và bán số lượng lớn đều được hỗ trợ.
+Đó là để giải quyết những vấn đề này mà Seaport Protocol đã được phát triển. Nó có những đặc điểm sau:
 
+- Mua số lượng lớn và bán số lượng lớn đều được hỗ trợ.
 - Hỗ trợ các loại tiền tệ khác nhau để mua.
 - Hỗ trợ thanh toán hỗn hợp. Ví dụ: đơn đặt hàng có thể được đặt để thanh toán bằng một số mã thông báo ERC20 cộng với một số mã thông báo ERC721. Mục đích chính là để loại bỏ tổn thất do việc chuyển đổi lẫn nhau của các loại tiền tệ khác nhau và giảm thêm chi phí cho người dùng.
 - Sử dụng SOL để giảm tiêu thụ gas, thử nghiệm hiện tại là khoảng 134000 đơn
 
->     Chúng ta có thể thấy rằng mục đích quan trọng nhất của Seaport Protocol là giảm tiêu thụ khí đốt của người sử dụng và giảm độ phức tạp của quy trình mua hàng. 2.	Cách Seaport hoạt động
+>     Chúng ta có thể thấy rằng mục đích quan trọng nhất của Seaport Protocol là giảm tiêu thụ khí đốt của người sử dụng và giảm độ phức tạp của quy trình mua hàng.
 
 ### 2. Cách nó hoạt động -\_-
 
@@ -73,6 +74,10 @@ Contract address của token là cụ thể, một address = underfine đại di
 - _Đấu giá Hà Lan là đấu giá giảm dần. Kiểu lúc đầu nó sẽ đặt giá ở trên trời sau đó thì giảm dần ... em hum hiểu áp dụng trong NFT kiểu gì nhưng cái này ngoài đời thi nó áp dụng cho bán hoa ấy (nó còn có tên gọi khác là Tulip Auction) kiểu hoa thì sẽ héo nhưng lúc đầu nó còn tươi nên giá nó ở rất cao... qua vài ngày thì nó bắt đầu héo nên giá sẽ được giảm xuống đại loại thế :v_
 - _Còn đấu giá kiểu Anh.. Thì là loại bt ai hô cao thì sẽ được lấy hàng_
 
+##### 5. recipient
+
+consideration cần chỉ rỏ recipient. Đại diện cho recipient của token.
+
 #### Offerer
 
 Cần lưu ý rằng nếu đơn hàng muốn được lấp đầy hoặc được offerer chuyển offer đi thì phải thuộc một trong ba trường hợp sau:
@@ -88,8 +93,11 @@ Cần lưu ý rằng nếu đơn hàng muốn được lấp đầy hoặc đư�
 #### orderType
 
 **1) FULL và PARTIAL**
+
 FULL Cho biết rằng order không hỗ trợ điền một phần, trong khi một số phần của order được PARTIA L phép lấp đầy. Việc điền một phần thường được sử dụng cho ERC1155 NFT. Người mua có thể mua một phần của order.
+
 **2) OPEN và RESTRICTED**
+
 OPEN Cho biết rằng lệnh gọi thực hiện lệnh có thể được gửi bởi bất kỳ tài khoản nào, nhưng RESTRICTED là lệnh hạn chế yêu cầu lệnh phải được thực hiện offerer theo lệnh hoặc lệnh hoặc gọi vùng hoặc phương thức để xem giá trị kỳ diệu được trả về. Giá trị ma thuật này cho biết order đã được chấp thuận hay chưa.
 func: zoneisValidOrder(), isValidOrderIncludingExtraData()
 
@@ -111,9 +119,11 @@ enum OrderType {
 
 Zone là một tài khoản phụ không bắt buộc, thường là một hợp đồng.
 Có hai quyền bổ sung:
-Zone có thể hủy order tương ứng bằng cách gọi cancel(). (Lưu ý rằng offerer cũng có thể hủy order của chính mình, riêng lẻ hoặc bằng cách gọi incrementCounter () để hủy ngay lập tức tất cả các order đã ký với bộ đếm hiện tại
-Lệnh loại RESTRICTED phải được thực thi bởi zone hoặcofferer hoặc bằng cách gọi các method isValidOrder () hoặc isValidOrderIncludingExtraData () của zone để xem magic valuet được trả về. Magic valuet này cho biết order đã được chấp thuận hay chưa.
-Nói một cách đơn giản, zone được xác minh bổ sung trước khi đặt order và việc listing offerer có thể bị hủy..Offerer có thể sử dụng zone để thực hiện một số hoạt động liên quan đến lọc giao dịch
+
+- Zone có thể hủy order tương ứng bằng cách gọi cancel(). (Lưu ý rằng offerer cũng có thể hủy order của chính mình, riêng lẻ hoặc bằng cách gọi incrementCounter () để hủy ngay lập tức tất cả các order đã ký với bộ đếm hiện tại.
+- Lệnh loại RESTRICTED phải được thực thi bởi zone hoặcofferer hoặc bằng cách gọi các method isValidOrder () hoặc isValidOrderIncludingExtraData () của zone để xem magic valuet được trả về. Magic valuet này cho biết order đã được chấp thuận hay chưa.
+
+  > Nói một cách đơn giản, zone được xác minh bổ sung trước khi đặt order và việc listing offerer có thể bị hủy..Offerer có thể sử dụng zone để thực hiện một số hoạt động liên quan đến lọc giao dịch
 
 #### zoneHash
 
@@ -128,3 +138,5 @@ zoneHash đại diện cho một giá trị 32 byte tùy ý sẽ được cung c
 
 Bộ đếm, phải giống bộ đếm của offerer.
 Một offerer có thể hủy ngay lập tức tất cả các order đã ký với bộ đếm hiện tại bằng cách gọi incrementCounter ().
+
+[Bài viết tham khảo](https://github.com/cryptochou/seaport-analysis)
